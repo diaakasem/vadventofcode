@@ -33,14 +33,8 @@ def main [
     touch $"($year)/day-($day)/input.txt"
     touch $"($year)/day-($day)/sample_input_part1.txt"
     touch $"($year)/day-($day)/sample_input_part2.txt"
-    "
-import os
-
-fn main() {
-	input_file := os.read_file(os.args[1])!
-	println(input_file)
-}
-    " | save $"($year)/day-($day)/main_part1.v"
-    cp $"($year)/day-($day)/main_part1.v" $"($year)/day-($day)/main_part2.v"
+    cp ./templates/base.v $"($year)/day-($day)/main_part1.v"
+    cp ./templates/base.v $"($year)/day-($day)/main_part2.v"
+    cp ./templates/justfile $"($year)/day-($day)/justfile"
     nvim $"($year)/day-($day)/main_part1.v"
 }

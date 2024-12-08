@@ -1,0 +1,12 @@
+test-first:
+    v run main_part1.v sample_input_part1.txt
+
+first:
+    v run main_part1.v input.txt
+
+test-second:
+    v run main_part1.v sample_input_part2.txt
+
+second:
+    v run main_part1.v input.txt
+

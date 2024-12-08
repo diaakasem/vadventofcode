@@ -26,72 +26,36 @@ fn count_matrix_word(word string, matrix [][]u8, y int, x int) int {
 	delta := word.len - 1
 	right, left, up, down := x + delta, x - delta, y - delta, y + delta
 
-	if right < row.len {
-		potential_xmas := row[x..x + len].bytestr()
-		if potential_xmas == word {
-			count += 1
-		}
+	// Check horizontal
+	if right < row.len && row[x..x + len].bytestr() == word {
+		count++
 	}
-	if left >= 0 {
-		potential_xmas := row[left..x + 1].bytestr()
-		if potential_xmas.reverse() == word {
-			count += 1
-		}
+	if left >= 0 && row[left..x + 1].bytestr().reverse() == word {
+		count++
 	}
 
-	if down < matrix.len {
-		mut potential_xmas := []u8{}
+	// Check all directions using a helper closure
+	check_direction := fn [word, matrix, x, y, len] (dx int, dy int) bool {
+		mut chars := []u8{}
 		for i in 0 .. len {
-			potential_xmas << matrix[y + i][x]
+			new_y := y + (dy * i)
+			new_x := x + (dx * i)
+			if new_y < 0 || new_y >= matrix.len || new_x < 0 || new_x >= matrix[0].len {
+				return false
+			}
+			chars << matrix[new_y][new_x]
 		}
-		if potential_xmas.bytestr() == word {
-			count += 1
-		}
+		return chars.bytestr() == word
 	}
-	if up >= 0 {
-		mut potential_xmas := []u8{}
-		for i in 0 .. len {
-			potential_xmas << matrix[y - i][x]
-		}
-		if potential_xmas.bytestr() == word {
-			count += 1
-		}
-	}
-	if down < matrix.len && right < row.len {
-		mut potential_xmas := []u8{}
-		for i in 0 .. len {
-			potential_xmas << matrix[y + i][x + i]
-		}
-		if potential_xmas.bytestr() == word {
-			count += 1
-		}
-	}
-	if up >= 0 && left >= 0 {
-		mut potential_xmas := []u8{}
-		for i in 0 .. len {
-			potential_xmas << matrix[y - i][x - i]
-		}
-		if potential_xmas.bytestr() == 'XMAS' {
-			count += 1
-		}
-	}
-	if down < matrix.len && left >= 0 {
-		mut potential_xmas := []u8{}
-		for i in 0 .. 4 {
-			potential_xmas << matrix[y + i][x - i]
-		}
-		if potential_xmas.bytestr() == word {
-			count += 1
-		}
-	}
-	if up >= 0 && right < row.len {
-		mut potential_xmas := []u8{}
-		for i in 0 .. len {
-			potential_xmas << matrix[y - i][x + i]
-		}
-		if potential_xmas.bytestr() == word {
-			count += 1
-		}
-	}
+
+	// Vertical
+	if check_direction(0, 1) { count++ }
+	if check_direction(0, -1) { count++ }
+	// Diagonal
+	if check_direction(1, 1) { count++ }
+	if check_direction(-1, -1) { count++ }
+	if check_direction(-1, 1) { count++ }
+	if check_direction(1, -1) { count++ }
+
 	return count
 }
